@@ -12,8 +12,7 @@ builder.Services.AddSwaggerGen();
 
 
 builder.Services.AddDbContext<RepositoryContext>(options => 
-options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection"))
-);
+options.UseSqlServer(builder.Configuration.GetConnectionString("sqlConnection")));
 
 var app = builder.Build();
 
