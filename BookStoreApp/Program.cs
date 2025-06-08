@@ -1,18 +1,21 @@
 using BookStoreApp.Extensions;
 using Microsoft.EntityFrameworkCore;
 using Repositories.EFCore;
+using System.Reflection.Metadata;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly)
+    .AddNewtonsoftJson();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.ConfigureSqlContext(builder.Configuration);
 builder.Services.ConfigureRepositoryManager();
-
+builder.Services.ConfigureServiceManager();
 
 
 var app = builder.Build();
