@@ -2,6 +2,7 @@
 using Repositories.Contracts;
 using Repositories.EFCore;
 using Services;
+using Services.Contracts;
 
 namespace BookStoreApp.Extensions
 {
@@ -18,5 +19,7 @@ namespace BookStoreApp.Extensions
 
         public static void ConfigureServiceManager(this IServiceCollection services) =>
             services.AddScoped<IServiceManager, ServiceManager>();
+        public static void ConfigureLoggerService(this IServiceCollection services) =>
+            services.AddSingleton<ILoggerService, LoggerManager>();
     }
 }
