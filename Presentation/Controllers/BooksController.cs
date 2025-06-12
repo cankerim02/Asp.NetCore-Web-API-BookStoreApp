@@ -1,4 +1,5 @@
-﻿using Entities.Models;
+﻿using Entities.Exceptions;
+using Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Services;
@@ -33,13 +34,10 @@ namespace Presentation.Controllers
         [HttpGet("{id:int}")]
         public IActionResult GetOneBook([FromRoute(Name = "id")] int id)
         {
-
-            throw new Exception("!!!!");
             var books = _manager
                            .BookService
                            .GetOneBookById(id, false);
-            if (books is null)
-                return NotFound();
+
             return Ok(books);
 
 
@@ -57,9 +55,6 @@ namespace Presentation.Controllers
 
             return StatusCode(201, book);
         }
-
-
-
 
 
         [HttpPut("{id:int}")]
@@ -96,8 +91,7 @@ namespace Presentation.Controllers
             var entity = _manager
                 .BookService
                 .GetOneBookById(id, true);
-            if (entity is null)
-                return NotFound(); //404
+            
             bookPatch.ApplyTo(entity);
             _manager.BookService.UpdateOneBook(id, entity, true);
             return NoContent(); //204
