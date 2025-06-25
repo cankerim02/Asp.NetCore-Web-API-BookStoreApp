@@ -1,4 +1,5 @@
 using BookStoreApp.Extensions;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NLog;
 using Repositories.EFCore;
@@ -18,9 +19,15 @@ builder.Services.AddControllers(config =>
 
 })
 .AddXmlDataContractSerializerFormatters()
-.AddCustomCsvFormatter() 
+.AddCustomCsvFormatter()
 .AddApplicationPart(typeof(Presentation.AssemblyReference).Assembly)
 .AddNewtonsoftJson();
+
+
+builder.Services.Configure<ApiBehaviorOptions>(options =>
+{
+    options.SuppressModelStateInvalidFilter = true; // Disable default model state validation 
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
