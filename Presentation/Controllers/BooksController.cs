@@ -90,24 +90,20 @@ namespace Presentation.Controllers
 
         [HttpPatch("{id:int}")]
         public async Task<IActionResult> PartiallyUpdateOneBookAsync([FromRoute(Name = "id")] int id,
-            [FromBody] JsonPatchDocument<BookDto> bookPatch)
+            [FromBody] JsonPatchDocument<BookDtoForUpdate> bookPatch)
         {
+            if (bookPatch is null)
+                return BadRequest(); // 400
 
-            // check entity
-            var bookDto = _manager
-                .BookService
-                .GetOneBookById(id, true);
-            
-            bookPatch.ApplyTo(bookDto);
+           var result = _manager.BookService.GetOneBookForPatch(id, false);
 
-            _manager.BookService.UpdateOneBook(id, 
-                new BookDtoForUpdate()
-                {
-                    Id = bookDto.Id,
-                    Title = bookDto.Title,
-                    Price = bookDto.Price
-                }, 
-                true);
+            bookPatch.ApplyTo(result.bookDtoForUpdate,ModelState);
+
+            TryValidateModel(result.bookDtoForUpdate);
+            if(!ModelState.IsValid)
+                return UnprocessableEntity(ModelState); //422
+
+            _manager.BookService.SaveChangesForPatch(result.bookDtoForUpdate, result.book);
             return NoContent(); //204
 
         }
