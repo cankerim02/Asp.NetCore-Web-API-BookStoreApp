@@ -3,6 +3,7 @@ using Entities.Exceptions;
 using Entities.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Presentation.ActionFilters;
 using Services;
 using System;
 using System.Collections.Generic;
@@ -44,23 +45,17 @@ namespace Presentation.Controllers
 
         }
 
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         [HttpPost]
         public async Task<IActionResult> CreateOneBookAsync([FromBody] BookDtoForInsertion bookDto)
         {
-
-
-            if (bookDto is null)
-                return BadRequest();
-
-            if(!ModelState.IsValid)
-                return UnprocessableEntity(ModelState); // 422
 
             var book = await _manager.BookService.CreateOneBookAsync(bookDto);
 
             return StatusCode(201, book); //CreatedAtRoute()
         }
 
-
+        [ServiceFilter(typeof(ValidationFilterAttribute))]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateOneBookAsync([FromRoute(Name = "id")] int id,
             [FromBody] BookDtoForUpdate bookDto)
@@ -95,12 +90,12 @@ namespace Presentation.Controllers
             if (bookPatch is null)
                 return BadRequest(); // 400
 
-           var result = await _manager.BookService.GetOneBookForPatchAsync(id, false);
+            var result = await _manager.BookService.GetOneBookForPatchAsync(id, false);
 
-            bookPatch.ApplyTo(result.bookDtoForUpdate,ModelState);
+            bookPatch.ApplyTo(result.bookDtoForUpdate, ModelState);
 
             TryValidateModel(result.bookDtoForUpdate);
-            if(!ModelState.IsValid)
+            if (!ModelState.IsValid)
                 return UnprocessableEntity(ModelState); //422
 
             await _manager.BookService.SaveChangesForPatchAsync(result.bookDtoForUpdate, result.book);
