@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 
 namespace Presentation.Controllers
 {
+    [ServiceFilter(typeof(LogFilterAttribute), Order = 2)]
     [ApiController]
     [Route("api/books")]
     public class BooksController : ControllerBase
@@ -55,7 +56,8 @@ namespace Presentation.Controllers
             return StatusCode(201, book); //CreatedAtRoute()
         }
 
-        [ServiceFilter(typeof(ValidationFilterAttribute))]
+        //[ServiceFilter(typeof(LogFilterAttribute),Order =2)]
+        [ServiceFilter(typeof(ValidationFilterAttribute),Order =1)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateOneBookAsync([FromRoute(Name = "id")] int id,
             [FromBody] BookDtoForUpdate bookDto)
