@@ -37,19 +37,23 @@ namespace Services
         public async Task DeleteOneBookAsync(int id, bool trackChanges)
         {
             // check entity
-           
-            var entity = await GetOneBookByIdAndCheckExists(id,trackChanges);
+
+            var entity = await GetOneBookByIdAndCheckExists(id, trackChanges);
             _manager.Book.DeleteOneBook(entity);
             _manager.SaveAsync();
 
 
         }
 
-        public async Task<IEnumerable<BookDto>> GetAllBooksAsync(BookParameters bookParameters,bool trackChanges)
-        {
-            var books = await _manager.Book.GetAllBooksAsync(bookParameters,trackChanges);
+        public async Task<(IEnumerable<BookDto> books, MetaData metaData)> GetAllBooksAsync(BookParameters bookParameters, bool trackChanges)
 
-            return _mapper.Map<IEnumerable<BookDto>>(books);
+        {
+            var booksWithMetaData = await _manager
+                .Book
+                .GetAllBooksAsync(bookParameters, trackChanges);
+
+            var booksDto = _mapper.Map<IEnumerable<BookDto>>(booksWithMetaData);
+            return (booksDto, booksWithMetaData.MetaData);
         }
 
 
@@ -69,7 +73,7 @@ namespace Services
         public async Task SaveChangesForPatchAsync(BookDtoForUpdate bookDtoForUpdate, Book book)
         {
             _mapper.Map(bookDtoForUpdate, book);
-           await _manager.SaveAsync();
+            await _manager.SaveAsync();
         }
 
         public async Task UpdateOneBookAsync(int id, BookDtoForUpdate bookDto, bool trackChanges)
