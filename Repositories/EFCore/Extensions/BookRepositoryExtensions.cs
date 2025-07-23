@@ -15,5 +15,15 @@ namespace Repositories.EFCore.Extensions
             (books.Price >= minPrice) && 
             (books.Price <= maxPrice));
 
+        public static IQueryable<Book> Search(this IQueryable<Book> books, string searchTerm)
+        {
+            if (string.IsNullOrWhiteSpace(searchTerm))
+                return books;
+            var lowerCaseTerm = searchTerm.Trim().ToLower();
+            return books
+                .Where(b => b.Title
+                .ToLower()
+                .Contains(searchTerm));
+        }
     }
 }
