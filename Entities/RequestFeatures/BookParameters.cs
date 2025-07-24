@@ -8,5 +8,10 @@
 
         public String? SearchTerm { get; set; } // searching 
 
+        public BookParameters()
+        {
+            OrderBy = "id"; //sıralama
+        }
+
     }
 }
