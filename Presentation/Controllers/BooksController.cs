@@ -26,10 +26,10 @@ namespace Presentation.Controllers
         {
             _manager = manager;
         }
-
-        [HttpGet]
+        [HttpHead]
+        [HttpGet(Name ="GetAllBooksAsync")]
         [ServiceFilter(typeof(ValidateMediaTypeAttribute))]
-        public async Task<IActionResult> GetAllBooksAsync([FromQuery]BookParameters bookParameters)
+        public async Task<IActionResult> GetAllBooksAsync([FromQuery] BookParameters bookParameters)
         {
             var linkParameters = new LinkParameters()
             {
@@ -39,7 +39,7 @@ namespace Presentation.Controllers
 
             var result = await _manager
                 .BookService
-                .GetAllBooksAsync(linkParameters,false);
+                .GetAllBooksAsync(linkParameters, false);
 
             Response.Headers.Add("X-Pagination", JsonSerializer.Serialize(result.metaData));
 
@@ -72,7 +72,7 @@ namespace Presentation.Controllers
         }
 
         //[ServiceFilter(typeof(LogFilterAttribute),Order =2)]
-        [ServiceFilter(typeof(ValidationFilterAttribute),Order =1)]
+        [ServiceFilter(typeof(ValidationFilterAttribute), Order = 1)]
         [HttpPut("{id:int}")]
         public async Task<IActionResult> UpdateOneBookAsync([FromRoute(Name = "id")] int id,
             [FromBody] BookDtoForUpdate bookDto)
@@ -118,6 +118,12 @@ namespace Presentation.Controllers
             await _manager.BookService.SaveChangesForPatchAsync(result.bookDtoForUpdate, result.book);
             return NoContent(); //204
 
+        }
+        [HttpOptions]
+        public IActionResult GetBookOptions()
+        {
+            Response.Headers.Add("Allow", "GET, POST, PUT, PATCH, DELETE, HEAD, OPTIONS");
+            return Ok();
         }
     }
 }
