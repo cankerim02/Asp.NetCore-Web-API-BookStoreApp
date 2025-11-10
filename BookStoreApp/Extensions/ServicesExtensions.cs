@@ -67,6 +67,9 @@ namespace BookStoreApp.Extensions
                 {
                     systemTextJsonOutputFormatter.SupportedMediaTypes
                     .Add("application/vnd.btkakademi.hateoas+json");
+
+                    systemTextJsonOutputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.btkakademi.apiroot+json");
                 }
 
                 var xmlOutputFormatter = config.
@@ -77,6 +80,9 @@ namespace BookStoreApp.Extensions
                 {
                     xmlOutputFormatter.SupportedMediaTypes
                     .Add("application/vnd.btkakademi.hateoas+xml");
+
+                    xmlOutputFormatter.SupportedMediaTypes
+                    .Add("application/vnd.btkakademi.apiroot+xml");
                 }
             });
         }
