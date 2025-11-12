@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Presentation.ActionFilters;
+using Presentation.Controllers;
 using Repositories.Contracts;
 using Repositories.EFCore;
 using Services;
@@ -95,6 +96,8 @@ namespace BookStoreApp.Extensions
                 opt.ReportApiVersions = true;
                 opt.AssumeDefaultVersionWhenUnspecified = true;
                 opt.DefaultApiVersion = new ApiVersion(1, 0);
+                opt.ApiVersionReader = new HeaderApiVersionReader("api-version");
+
             });
         }
     }
