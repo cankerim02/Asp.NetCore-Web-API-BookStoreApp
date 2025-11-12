@@ -18,7 +18,8 @@ namespace Presentation.Controllers
     [ApiVersion("1.0")]
     [ServiceFilter(typeof(LogFilterAttribute), Order = 2)]
     [ApiController]
-    [Route("api/{v:apiversion}/books")]
+    [Route("api/books")]
+
     public class BooksController : ControllerBase
     {
         private readonly IServiceManager _manager;
